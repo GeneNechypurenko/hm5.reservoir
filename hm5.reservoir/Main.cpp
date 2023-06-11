@@ -1,7 +1,11 @@
 #include <iostream>
 #include <windows.h>
+#include <conio.h>
 
 #include "Reservoir.h"
+#include "Globals.h"
+#include "Logic.h"
+#include "Display.h"
 
 using namespace std;
 
@@ -10,34 +14,74 @@ int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    cout << "\n-----------------orinal-----------------\n";
+	int size = 0;
+	Reservoir* reservoir = new Reservoir[size];
 
-    Reservoir reservoir[2] = {
+    char filename[MAX_PATH] = "save.bin";
+    FILE* file = nullptr;
+    LogicReadData(file, reservoir, filename, size);
 
-        Reservoir("Море", 100.0, 200.0, 50.0),
-        Reservoir("Озеро", 50.0, 100.0, 20.0)
-    };
+	char select = 0;
 
-    for (int i = 0; i < 2; i++) 
-        reservoir[i].Print();
+	const char* menu[]
+	{
+		"Додати водойму     ",
+		"Вивести список     ",
+		"Видалити водойму   ",
+		"Редагувати         ",
+		"Вихід              "
+	};
 
-    if (reservoir[0] == reservoir[1]) 
-        cout << "Водойми однакового типу" << endl;
-    else 
-        cout << "Водойми різного типу" << endl;
-    
+	while (true) {
 
-    cout << "\n----------------- copy -----------------\n";
+		DisplayMenu(menu, MENU_ROW, select);
 
-    reservoir[1] = reservoir[0];
+		char action = _getch();
+		if (action == 0 || action == 224)
+			action = _getch();
 
-    for (int i = 0; i < 2; i++)
-        reservoir[i].Print();
+		switch (action) {
 
-    if (reservoir[0] == reservoir[1])
-        cout << "Водойми однакового типу" << endl;
-    else
-        cout << "Водойми різного типу" << endl;
+		case UP:
+			select = (select - 1 + MENU_ROW) % MENU_ROW;
+			break;
+
+		case DOWN:
+			select = (select + 1) % MENU_ROW;
+			break;
+
+		case ENTER:
+			switch (select) {
+
+			case ADD:
+				DisplayAdd(reservoir, size);
+				break;
+
+			case PRINT:
+				DisplayPrint(reservoir, size);
+				break;
+
+			case REMOVE:
+				DisplayRemove(reservoir, size);
+				break;
+
+			case EDIT:
+				DisplayEdit(reservoir, size);
+				break;
+
+			case EXIT:
+				LogicSaveData(file, reservoir, filename, size);
+				delete[]reservoir;
+				return 0;
+			}
+			break;
+
+		case ESC:
+			LogicSaveData(file, reservoir, filename, size);
+			delete[]reservoir;
+			return 0;
+		}
+	}
         
     return 0;
 }

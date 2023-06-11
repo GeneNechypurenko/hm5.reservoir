@@ -6,14 +6,14 @@ using namespace std;
 class Reservoir {
 
     char* type;
-    long width;
-    long length;
-    long depth;
+    int width;
+    int length;
+    int depth;
 
 public:
-    explicit Reservoir(const char* type = "", long width = 0, long length = 0, long depth = 0);
+    explicit Reservoir();
 
-    Reservoir(const Reservoir& object);
+    Reservoir(const Reservoir& object) = delete;
 
     ~Reservoir();
 
@@ -21,16 +21,16 @@ public:
     bool operator==(const Reservoir& object) const;
 
     void SetType(const char* type);
-    void SetWidth(long width);
-    void SetLength(long length);
-    void SetDepth(long depth);
+    void SetWidth(int width);
+    void SetLength(int length);
+    void SetDepth(int depth);
 
     const char* GetType() const;
-    long GetWidth() const;
-    long GetLength() const;
-    long GetDepth() const;
+    int GetWidth() const;
+    int GetLength() const;
+    int GetDepth() const;
 
-    long Volume() const;
-    long Area() const;
+    int Volume() const;
+    int Area() const;
     void Print() const;
 };
